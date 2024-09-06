@@ -9,4 +9,4 @@ If you aren't seeing any text, check the console and make sure the file path is 
 If the module appears to be blocking lower priority modules from displaying, make sure you don't have both 'DisplayUntilEmptied' and 'UpdateOnEmpty' enabled as it will continuously update the module with blank text.
 
 # Installation
-Simply put the module's .nupkg file into /%localappdata%/VRCOSC/packages and restart OSCVRC.
+Simply put the module's .nupkg file into \%localappdata%\VRCOSC\packages and restart OSCVRC.
