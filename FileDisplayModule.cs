@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Valve.VR;
 using VRCOSC.Game.Modules;
 using VRCOSC.Game.Modules.Avatar;
@@ -14,11 +14,13 @@ namespace CynVR
         private string? filePath;
         private string? fileContent;
         private bool displayUntilEmptied;
+        private bool updateOnEmptied;
         private bool isDirty;
 
         protected override void CreateAttributes() {
             this.CreateSetting(FileReaderSetting.FilePath, "File Path", "The path to the text file", string.Empty, null);
             this.CreateSetting(FileReaderSetting.DisplayUntilEmptied, "Display Until Emptied", "Display the text until the file is emptied", true, null);
+            this.CreateSetting(FileReaderSetting.UpdateOnEmpty, "Update on Empty", "Update the displayed text when the file is emptied", false, null);
             this.CreateVariable(FileReaderVariable.FileContent, "File Content", "content");
             this.CreateState(FileReaderState.Default, "Default", this.GetVariableFormat(FileReaderVariable.FileContent) ?? "");
             this.CreateEvent(FileVariableChanged.TextUpdate, "Content Changed", this.GetVariableFormat(FileReaderVariable.FileContent) ?? "", 4f);
@@ -33,6 +35,7 @@ namespace CynVR
                 this.Log("Invalid file path. Please provide a valid file path in the module settings.");
 
             displayUntilEmptied = GetSetting<bool>(FileReaderSetting.DisplayUntilEmptied);
+            updateOnEmptied = GetSetting<bool>(FileReaderSetting.UpdateOnEmpty);
         }
 
         [ModuleUpdate(ModuleUpdateMode.ChatBox, true, 2000)]
@@ -49,7 +52,7 @@ namespace CynVR
                 isDirty = true;
             }
 
-            if (string.IsNullOrEmpty(fileContent)) return;
+            if (string.IsNullOrEmpty(fileContent) && !updateOnEmptied) return;
 
             if (displayUntilEmptied || isDirty) {
                 isDirty = false;
@@ -76,6 +79,7 @@ namespace CynVR
         {
             FilePath,
             DisplayUntilEmptied,
+            UpdateOnEmpty,
         }
 
         private enum FileReaderState
